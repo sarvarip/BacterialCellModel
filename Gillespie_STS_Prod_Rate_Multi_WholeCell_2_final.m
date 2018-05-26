@@ -11,6 +11,7 @@ function [state_array, location_array, type_idx_array, frac_total_transcript, en
     no_mrna = length(type_idx_array); 
     ribo_movement = 0;
     protein_diluted = 0;
+    ribo_reset =0;
 
     if nargin == 11
         transition_array = zeros(no_mrna,R);
@@ -48,7 +49,7 @@ function [state_array, location_array, type_idx_array, frac_total_transcript, en
         %need to make sure that conditions are such that at energy=1 the
         %elongation rates are small; otherwise back and forth oscillations!
         translation_scale = (energy^2/(energy^2+10000^2));
-        transition_array(transition_array>0) = transition_array(transition_array>0)*translation_scale; 
+        transition_array = transition_array*translation_scale; 
         %division at the end to go back to normal so that due to recursion the
         %multiplication does not accumulate!
     
@@ -168,40 +169,60 @@ function [state_array, location_array, type_idx_array, frac_total_transcript, en
                 s_i = s_i/ratio;
                 %rounding issues
                 if ~isequal(round(frac_total_transcript), total_transcript)
-                    decreased = round(frac_total_transcript)~=total_transcript; %logical array
-                    types = 1:3;
-                    decreased_types = types(decreased);
+                    decreased = total_transcript-round(frac_total_transcript); %changed to account for cases
+                    %when more than 1 mRNAs need to be deleted (can
+                    %happen if transcript number > 10^8/7500=13333)
+                    types = 1:4;
+                    decreased_types = types(decreased>0);
                     %deleting transcripts, which have smallest amount of ribos
                     %on them
                     %Consider: are there transcripts w/o ribosomes?
-                    unoccupied_types = unique(type_idx_array(unoccupied_mrna));
                     for i = decreased_types
-                        %If there are none
-                        if ~ismember(i, unoccupied_types)
-                            location_array_nonzero = location_array(location_array>0);
-                            mrna_to_be_deleted = mode_least(location_array_nonzero(type_idx_array(location_array_nonzero)==i)); %if I leave zero elements in then indexing error
-                            %reset ribosomes on that mRNA
-                            ribos_on_mrna_to_be_deleted = find(location_array==mrna_to_be_deleted);
-                            location_array(ribos_on_mrna_to_be_deleted) = 0;
-                            state_array(ribos_on_mrna_to_be_deleted) = 1;
-                            transition_array(ribos_on_mrna_to_be_deleted+1) = 0; 
-                            %delete mRNA
-                            type_idx_array(mrna_to_be_deleted) = [];
-                            no_mrna = no_mrna - 1;
-                            location_array = location_array - (location_array>mrna_to_be_deleted);
-                            temp(mrna_to_be_deleted) = [];
-                            %disp('non-empty mRNA diluted');
-                        else
-                            unoccupied_mrna = setdiff(1:no_mrna, unique(location_array)); %need to calculate again, because no_mrna 
-                            %might have been reduced in previous loop!!
-                            unoccupied_correct_type = unoccupied_mrna(type_idx_array(unoccupied_mrna)==i);
-                            mrna_to_be_deleted = unoccupied_correct_type(randi(length(unoccupied_correct_type))); %just take first one
-                            %delete mRNA
-                            type_idx_array(mrna_to_be_deleted) = [];
-                            no_mrna = no_mrna - 1;
-                            temp(mrna_to_be_deleted) = [];
-                            location_array = location_array - (location_array>mrna_to_be_deleted);
-                            %disp('empty mRNA diluted');
+                        for j = 1:decreased(i)
+                            unoccupied_mrna = setdiff(1:no_mrna, unique(location_array)); %need to calculate again, because no_mrna
+                                %might have been reduced in previous loop!!
+                            unoccupied_types = unique(type_idx_array(unoccupied_mrna));
+                            if ~ismember(i, unoccupied_types)
+                                location_array_nonzero = location_array(location_array>0);
+                                mrna_to_be_deleted = mode_least(location_array_nonzero(type_idx_array(location_array_nonzero)==i)); %if I leave zero elements in then indexing error
+                                %reset ribosomes on that mRNA
+                                ribos_on_mrna_to_be_deleted = find(location_array==mrna_to_be_deleted);
+                                location_array(ribos_on_mrna_to_be_deleted) = 0;
+                                state_array(ribos_on_mrna_to_be_deleted) = 1;
+                                transition_array(ribos_on_mrna_to_be_deleted+1) = 0;
+                                %delete mRNA
+                                type_idx_array(mrna_to_be_deleted) = [];
+                                no_mrna = no_mrna - 1;
+                                location_array = location_array - (location_array>mrna_to_be_deleted);
+                                temp(mrna_to_be_deleted) = [];
+                                if prev_location>mrna_to_be_deleted %because the mRNA number where the protein was produced from 
+                                    %shifts by one, due to deletion
+                                    prev_location = prev_location-1;
+                                end
+                                if prev_location==mrna_to_be_deleted
+                                    ribo_reset = 1;
+                                end
+                                disp('non-empty mRNA diluted');
+                            else
+                                unoccupied_correct_type = unoccupied_mrna(type_idx_array(unoccupied_mrna)==i);
+                                mrna_to_be_deleted = unoccupied_correct_type(randi(length(unoccupied_correct_type)));
+                                %delete mRNA
+                                type_idx_array(mrna_to_be_deleted) = [];
+                                no_mrna = no_mrna - 1;
+                                temp(mrna_to_be_deleted) = [];
+                                location_array = location_array - (location_array>mrna_to_be_deleted);
+                                if prev_location>mrna_to_be_deleted %because the mRNA number where the protein was produced from 
+                                    %shifts by one, due to deletion
+                                    prev_location = prev_location-1;
+                                end
+                                if prev_location==mrna_to_be_deleted
+                                    ribo_reset = 1; %in this case, there was only one ribosome on mRNA, it 
+                                    %produced a protein, so there are no
+                                    %other ribos on the mRNA any more, no
+                                    %need to take care of previous ribos 
+                                end
+                                disp('empty mRNA diluted');
+                            end
                         end
                     end
                 end
@@ -210,8 +231,8 @@ function [state_array, location_array, type_idx_array, frac_total_transcript, en
                     %got released, so might as well just delete that!!!
                     state_array(ribo) = [];
                     location_array(ribo) = [];
-                    transition_array(ribo+1) = [];
-                    %disp('Protein diluted');
+                    transition_array(ribo+1) = []; 
+                    disp('Protein diluted');
                     protein_diluted = 1;
                 end
             else
@@ -222,16 +243,19 @@ function [state_array, location_array, type_idx_array, frac_total_transcript, en
             location_array(ribo) = ribo_loc;
         end
         
-        %taking care of previous ribos
-        if prev_state == 2
-            temp(prev_location) = beta_array_cell{type_idx_array(prev_location)}(1);
-        elseif prev_state == 1
-            temp(ribo_loc) = 0;
-        elseif sum(state_array==(prev_state-1))>0
-            if sum(location_array(state_array==(prev_state-1))==prev_location) == 1
-                vec = find(state_array==(prev_state-1));
-                rib = vec(location_array(state_array==(prev_state-1))==prev_location);
-                transition_array(rib+1) = beta_array_cell{type_idx_array(prev_location)}(prev_state-1);
+        %taking care of previous ribos on mRNA (unless all ribos that were
+        %on that mRNA were reset, because mRNA was diluted out)
+        if ribo_reset == 0
+            if prev_state == 2
+                temp(prev_location) = beta_array_cell{type_idx_array(prev_location)}(1);
+            elseif prev_state == 1
+                temp(ribo_loc) = 0; %ribo_loc = prev_location, I use it interchangeably
+            elseif sum(state_array==(prev_state-1))>0
+                if sum(location_array(state_array==(prev_state-1))==prev_location) == 1
+                    vec = find(state_array==(prev_state-1));
+                    rib = vec(location_array(state_array==(prev_state-1))==prev_location);
+                    transition_array(rib+1) = beta_array_cell{type_idx_array(prev_location)}(prev_state-1);
+                end
             end
         end
         
@@ -257,19 +281,6 @@ function [state_array, location_array, type_idx_array, frac_total_transcript, en
         end
     end
     
-    %Debug I
-    
-    free = sum(location_array==0);
-    tt = 1:length(state_array);
-    free_ribos = tt(location_array==0);
-    
-    if sum(transition_array(free_ribos+1)==0) ~= free
-        disp('Location-State-Transition Error. Program paused, Press Ctrl-C to exit!');
-        pause;
-    end
-    
-    %Debug I ends
-    
     if energy==1
         if exist('transition_array_to_return', 'var')
             transition_array = transition_array_to_return;
@@ -280,32 +291,6 @@ function [state_array, location_array, type_idx_array, frac_total_transcript, en
     else
         transition_array = transition_array(2:end-6);
         transition_array(transition_array>0) = transition_array(transition_array>0)/translation_scale; 
-    end
-    
-    %Debug II
-    
-    total_transcript = round(frac_total_transcript);
-    P_count_vec = round(frac_P_count_vec);
-    no_mrna = length(type_idx_array); 
-    
-    if sum(total_transcript) ~= no_mrna
-        disp('Indexing Error with total_transcript! Program paused, Press Ctrl-C to exit!');
-        pause;
-    end
-    
-    if length(temp) ~= no_mrna
-        disp('Indexing Error with temp! Program paused, Press Ctrl-C to exit!');
-        pause;
-    end
-    
-    if length(location_array) ~= P_count_vec(1)
-        disp('Logical Error: number of ribosomes does not correspond to number of R proteins. Program paused, Press Ctrl-C to exit!');
-        pause;
-    end
-    
-    if sum(transition_array<0)>0
-        disp('Logical Error: numbers in transition_array are negative. Program paused, Press Ctrl-C to exit!');
-        pause;
-    end
+    end 
     
 end
