@@ -78,7 +78,7 @@ parfor index=1:14 %run 1 %1:4 for test
                 if timestep >= ref
                     if exists_reference == 0
                         time_ref = time(timestep+1);
-                        mass_ref = zeros(1, no_types_mrna); 
+                        mass_ref = zeros(1, no_types_mRNA); 
                         for i=1:no_types_mRNA
                             mass_ref(i) = aac_array(i)*length(time_P_cell{i});
                         end
@@ -89,7 +89,7 @@ parfor index=1:14 %run 1 %1:4 for test
                     else
                         time_current = time(timestep+1);
                         time_elapsed = time_current - time_ref;
-                        mass_current = zeros(1, no_types_mrna); 
+                        mass_current = zeros(1, no_types_mRNA); 
                         for i=1:no_types_mRNA
                             mass_current(i) = aac_array(i)*length(time_P_cell{i});
                         end
@@ -130,7 +130,7 @@ parfor index=1:14 %run 1 %1:4 for test
                 if timestep >= ref
                     if exists_reference == 0
                         time_ref = time(timestep+1);
-                        mass_ref = zeros(1, no_types_mrna); 
+                        mass_ref = zeros(1, no_types_mRNA); 
                         for i=1:no_types_mRNA
                             mass_ref(i) = aac_array(i)*length(time_P_cell{i});
                         end
@@ -141,7 +141,7 @@ parfor index=1:14 %run 1 %1:4 for test
                     else
                         time_current = time(timestep+1);
                         time_elapsed = time_current - time_ref;
-                        mass_current = zeros(1, no_types_mrna); 
+                        mass_current = zeros(1, no_types_mRNA); 
                         for i=1:no_types_mRNA
                             mass_current(i) = aac_array(i)*length(time_P_cell{i});
                         end
@@ -181,7 +181,7 @@ parfor index=1:14 %run 1 %1:4 for test
                 if timestep >= ref
                     if exists_reference == 0
                         time_ref = time(timestep+1);
-                        mass_ref = zeros(1, no_types_mrna); 
+                        mass_ref = zeros(1, no_types_mRNA); 
                         for i=1:no_types_mRNA
                             mass_ref(i) = aac_array(i)*length(time_P_cell{i});
                         end
@@ -192,7 +192,7 @@ parfor index=1:14 %run 1 %1:4 for test
                     else
                         time_current = time(timestep+1);
                         time_elapsed = time_current - time_ref;
-                        mass_current = zeros(1, no_types_mrna); 
+                        mass_current = zeros(1, no_types_mRNA); 
                         for i=1:no_types_mRNA
                             mass_current(i) = aac_array(i)*length(time_P_cell{i});
                         end
