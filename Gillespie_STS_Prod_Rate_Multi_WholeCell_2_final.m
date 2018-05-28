@@ -31,7 +31,7 @@ function [state_array, location_array, type_idx_array, frac_total_transcript, en
     %Q transcription rate
     Q_tr = 850*(energy/(energy+10000))*((5000^4)/(5000^4+frac_total_transcript(3)^4)); %4.4, 152000
     %RNA degradation with ribosome protection
-    unoccupied_mrna = setdiff(1:no_mrna, unique(location_array));
+    unoccupied_mrna = setdiff(1:no_mrna, location_array);
     no_unoccupied_mrna = length(unoccupied_mrna);
     if no_unoccupied_mrna > 0
         deg = 0.1; %might wanna change to 0.2 to ensure smaller number of transcripts 
@@ -179,7 +179,7 @@ function [state_array, location_array, type_idx_array, frac_total_transcript, en
                     %Consider: are there transcripts w/o ribosomes?
                     for i = decreased_types
                         for j = 1:decreased(i)
-                            unoccupied_mrna = setdiff(1:no_mrna, unique(location_array)); %need to calculate again, because no_mrna
+                            unoccupied_mrna = setdiff(1:no_mrna, location_array); %need to calculate again, because no_mrna
                                 %might have been reduced in previous loop!!
                             unoccupied_types = unique(type_idx_array(unoccupied_mrna));
                             if ~ismember(i, unoccupied_types)
@@ -202,7 +202,7 @@ function [state_array, location_array, type_idx_array, frac_total_transcript, en
                                 if prev_location==mrna_to_be_deleted
                                     ribo_reset = 1;
                                 end
-                                disp('non-empty mRNA diluted');
+                                %disp('non-empty mRNA diluted');
                             else
                                 unoccupied_correct_type = unoccupied_mrna(type_idx_array(unoccupied_mrna)==i);
                                 mrna_to_be_deleted = unoccupied_correct_type(randi(length(unoccupied_correct_type)));
@@ -221,7 +221,7 @@ function [state_array, location_array, type_idx_array, frac_total_transcript, en
                                     %other ribos on the mRNA any more, no
                                     %need to take care of previous ribos 
                                 end
-                                disp('empty mRNA diluted');
+                                %disp('empty mRNA diluted');
                             end
                         end
                     end
@@ -232,7 +232,7 @@ function [state_array, location_array, type_idx_array, frac_total_transcript, en
                     state_array(ribo) = [];
                     location_array(ribo) = [];
                     transition_array(ribo+1) = []; 
-                    disp('Protein diluted');
+                    %disp('Protein diluted');
                     protein_diluted = 1;
                 end
             else
