@@ -102,7 +102,7 @@ parfor index=1:14 %run 1 %1:4 for test
                         mass_ref = mass_current;
                         %inst_gr_array = [inst_gr_array; inst_gr]; %waste calculating both here, second can be calc from first
                         total_inst_gr_array((timestep/2000)-ss_start) = total_inst_gr;
-                        disp(['Instantaneous growth rate: ',num2str(inst_gr)]);
+                        disp(['Instantaneous growth rate: ',num2str(total_inst_gr)]);
                         P_count_vec_array((timestep/2000)-ss_start+1,:) = P_count_vec;
                         time_ss((timestep/2000)-ss_start+1) = time_ref;
                     end
@@ -154,7 +154,7 @@ parfor index=1:14 %run 1 %1:4 for test
                         mass_ref = mass_current;
                         %inst_gr_array = [inst_gr_array; inst_gr]; %waste calculating both here, second can be calc from first
                         total_inst_gr_array((timestep/2000)-ss_start) = total_inst_gr;
-                        disp(['Instantaneous growth rate: ',num2str(inst_gr)]);
+                        disp(['Instantaneous growth rate: ',num2str(total_inst_gr)]);
                         P_count_vec_array((timestep/2000)-ss_start+1,:) = P_count_vec;
                         time_ss((timestep/2000)-ss_start+1) = time_ref;
                     end
@@ -205,7 +205,7 @@ parfor index=1:14 %run 1 %1:4 for test
                         mass_ref = mass_current;
                         %inst_gr_array = [inst_gr_array; inst_gr]; %waste calculating both here, second can be calc from first
                         total_inst_gr_array((timestep/2000)-ss_start) = total_inst_gr;
-                        disp(['Instantaneous growth rate: ',num2str(inst_gr)]);
+                        disp(['Instantaneous growth rate: ',num2str(total_inst_gr)]);
                         P_count_vec_array((timestep/2000)-ss_start+1,:) = P_count_vec;
                         time_ss((timestep/2000)-ss_start+1) = time_ref;
                     end
@@ -225,7 +225,7 @@ parfor index=1:14 %run 1 %1:4 for test
     transient_P=zeros(1,no_types_mRNA);
     total_P = zeros(1,no_types_mRNA);
     for i=1:no_types_mRNA
-        transient_P(i) = sum(time_P_cell{i}<=time(ref)) + total_protein_init(i); %we only care about states from the 1001th timstep on (incl), but
+        transient_P(i) = sum(time_P_cell{i}<=time(ref)) %we only care about states from the 1001th timstep on (incl), but
         total_P(i) = length(time_P_cell{i});
         %if a protein was produced at time = 1001, it was the trasition from state
         %1000 to 1001, so we disregard it! CHANGED: we are not averaging
