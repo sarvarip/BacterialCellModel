@@ -30,8 +30,10 @@ parfor index=1:14 %run 1 %1:4 for test
 
     type_idx_array = [ones(1,total_transcript(1)), 2*ones(1,total_transcript(2)), 3*ones(1,total_transcript(3)), 4*ones(1,total_transcript(4))]; 
 
-    maxsteps = 2000*36000; %~est. 10 hrs
-    ref = 2000*25000;
+    ss_start = 25000;
+    ss_end = 36000;
+    maxsteps = 2000*ss_end; %~est. 10 hrs
+    ref = 2000*ss_start;
 
     base3 = dec2base(index,3,3);
     j = str2double(base3(1))+1; %transcription rate option - function call
@@ -56,7 +58,9 @@ parfor index=1:14 %run 1 %1:4 for test
     %Iterations
 
     exists_reference = 0;
-    total_inst_gr_array=[];
+    total_inst_gr_array=zeros(1, ss_end-ss_start);
+    P_count_vec_array=zeros(ss_end-ss_start+1, 4);
+    time_ss = zeros(1, ss_end-ss_start+1);
     tic
     
     if j == 1
@@ -71,7 +75,7 @@ parfor index=1:14 %run 1 %1:4 for test
             end
 
             if rem(timestep,2000)==0
-                if timestep >= ref+1
+                if timestep >= ref
                     if exists_reference == 0
                         time_ref = time(timestep+1);
                         mass_ref = zeros(1, no_types_mrna); 
@@ -80,6 +84,8 @@ parfor index=1:14 %run 1 %1:4 for test
                         end
                         total_mass_ref = sum(mass_ref);
                         exists_reference = 1;
+                        P_count_vec_array((timestep/2000)-ss_start+1,:) = P_count_vec;
+                        time_ss((timestep/2000)-ss_start+1) = time_ref;
                     else
                         time_current = time(timestep+1);
                         time_elapsed = time_current - time_ref;
@@ -95,8 +101,10 @@ parfor index=1:14 %run 1 %1:4 for test
                         time_ref = time_current;
                         mass_ref = mass_current;
                         %inst_gr_array = [inst_gr_array; inst_gr]; %waste calculating both here, second can be calc from first
-                        total_inst_gr_array = [total_inst_gr_array, total_inst_gr];
+                        total_inst_gr_array((timestep/2000)-ss_start) = total_inst_gr;
                         disp(['Instantaneous growth rate: ',num2str(inst_gr)]);
+                        P_count_vec_array((timestep/2000)-ss_start+1,:) = P_count_vec;
+                        time_ss((timestep/2000)-ss_start+1) = time_ref;
                     end
                 end    
                 ratio = timestep/maxsteps;
@@ -119,7 +127,7 @@ parfor index=1:14 %run 1 %1:4 for test
             end
 
             if rem(timestep,2000)==0
-                if timestep >= ref+1
+                if timestep >= ref
                     if exists_reference == 0
                         time_ref = time(timestep+1);
                         mass_ref = zeros(1, no_types_mrna); 
@@ -128,6 +136,8 @@ parfor index=1:14 %run 1 %1:4 for test
                         end
                         total_mass_ref = sum(mass_ref);
                         exists_reference = 1;
+                        P_count_vec_array((timestep/2000)-ss_start+1,:) = P_count_vec;
+                        time_ss((timestep/2000)-ss_start+1) = time_ref;
                     else
                         time_current = time(timestep+1);
                         time_elapsed = time_current - time_ref;
@@ -143,8 +153,10 @@ parfor index=1:14 %run 1 %1:4 for test
                         time_ref = time_current;
                         mass_ref = mass_current;
                         %inst_gr_array = [inst_gr_array; inst_gr]; %waste calculating both here, second can be calc from first
-                        total_inst_gr_array = [total_inst_gr_array, total_inst_gr];
+                        total_inst_gr_array((timestep/2000)-ss_start) = total_inst_gr;
                         disp(['Instantaneous growth rate: ',num2str(inst_gr)]);
+                        P_count_vec_array((timestep/2000)-ss_start+1,:) = P_count_vec;
+                        time_ss((timestep/2000)-ss_start+1) = time_ref;
                     end
                 end    
                 ratio = timestep/maxsteps;
@@ -166,7 +178,7 @@ parfor index=1:14 %run 1 %1:4 for test
             end
 
             if rem(timestep,2000)==0
-                if timestep >= ref+1
+                if timestep >= ref
                     if exists_reference == 0
                         time_ref = time(timestep+1);
                         mass_ref = zeros(1, no_types_mrna); 
@@ -175,6 +187,8 @@ parfor index=1:14 %run 1 %1:4 for test
                         end
                         total_mass_ref = sum(mass_ref);
                         exists_reference = 1;
+                        P_count_vec_array((timestep/2000)-ss_start+1,:) = P_count_vec;
+                        time_ss((timestep/2000)-ss_start+1) = time_ref;
                     else
                         time_current = time(timestep+1);
                         time_elapsed = time_current - time_ref;
@@ -190,8 +204,10 @@ parfor index=1:14 %run 1 %1:4 for test
                         time_ref = time_current;
                         mass_ref = mass_current;
                         %inst_gr_array = [inst_gr_array; inst_gr]; %waste calculating both here, second can be calc from first
-                        total_inst_gr_array = [total_inst_gr_array, total_inst_gr];
+                        total_inst_gr_array((timestep/2000)-ss_start) = total_inst_gr;
                         disp(['Instantaneous growth rate: ',num2str(inst_gr)]);
+                        P_count_vec_array((timestep/2000)-ss_start+1,:) = P_count_vec;
+                        time_ss((timestep/2000)-ss_start+1) = time_ref;
                     end
                 end    
                 ratio = timestep/maxsteps;
@@ -205,14 +221,16 @@ parfor index=1:14 %run 1 %1:4 for test
     
     %Final average production calcs
 
-    time_elapsed = time(end)-time(ref+1);
+    time_elapsed = time(end)-time(ref);
     transient_P=zeros(1,no_types_mRNA);
     total_P = zeros(1,no_types_mRNA);
     for i=1:no_types_mRNA
-        transient_P(i) = sum(time_P_cell{i}<=time(ref+1)) + total_protein_init(i); %we only care about states from the 1001th timstep on (incl), but
+        transient_P(i) = sum(time_P_cell{i}<=time(ref)) + total_protein_init(i); %we only care about states from the 1001th timstep on (incl), but
         total_P(i) = length(time_P_cell{i});
         %if a protein was produced at time = 1001, it was the trasition from state
-        %1000 to 1001, so we disregard it!
+        %1000 to 1001, so we disregard it! CHANGED: we are not averaging
+        %here; also ss_start is estimated, for simplicity, use ref instead
+        %of ref+1!!
     end
 
     P_ss = total_P-transient_P;
@@ -226,7 +244,7 @@ parfor index=1:14 %run 1 %1:4 for test
     disp(['Std. Inst. Growth rate: ', num2str(std_inst_growth_rate)]);
     
     
-    str = ['FYP_26_05_par_ex_', num2str(index)];
-    parsave(str, total_inst_gr_array, P_count_vec, total_P, transient_P, P_ss, time_elapsed, production_rate, growth_rate, avg_inst_growth_rate, std_inst_growth_rate);
+    str = ['FYP_29_05_par_ex_', num2str(index)];
+    parsave(str, total_inst_gr_array, P_count_vec_array, time_ss, total_P, transient_P, P_ss, time_elapsed, production_rate, growth_rate, avg_inst_growth_rate, std_inst_growth_rate);
     
 end
