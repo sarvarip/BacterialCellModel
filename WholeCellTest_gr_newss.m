@@ -1,11 +1,13 @@
 % © Peter Sarvari, Imperial College London
 
+clc, clear
+
 %Initialization
-total_mRNA = 3971;
 no_types_mRNA = 3;
 
 total_protein_init = [5363, 7498, 191750];
 total_transcript = [85, 104, 2780];
+total_mRNA = sum(total_transcript);
 init_rates = [1,1,1];
 temp = [init_rates(1)*ones(1,total_transcript(1)), init_rates(2)*ones(1,total_transcript(2)), init_rates(3)*ones(1,total_transcript(3))]; 
 max_elongation = 126;
