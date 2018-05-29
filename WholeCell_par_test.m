@@ -3,11 +3,11 @@
 clc, clear
 
 %parpool(4) %test - works, tested!
-parpool(14) %run1
-%parpool(13) %run2
+parpool(9) %run1
 
-parfor index=1:14 %run 1 %1:4 for test
-%parfor index=15:27 %run2
+parfor index=1:9 %run 1 %1:4 for test
+%parfor index=10:18 %run2
+%parfor index=19:27 %run3
 
     %Heterologous version
     %Initialization
@@ -99,7 +99,7 @@ parfor index=1:14 %run 1 %1:4 for test
                         total_mass_change = total_mass_current - total_mass_ref;
                         total_inst_gr = total_mass_change/(total_mass_ref*time_elapsed);
                         time_ref = time_current;
-                        mass_ref = mass_current;
+                        total_mass_ref = mass_current;
                         %inst_gr_array = [inst_gr_array; inst_gr]; %waste calculating both here, second can be calc from first
                         total_inst_gr_array((timestep/2000)-ss_start) = total_inst_gr;
                         disp(['Instantaneous growth rate: ',num2str(total_inst_gr)]);
@@ -151,7 +151,7 @@ parfor index=1:14 %run 1 %1:4 for test
                         total_mass_change = total_mass_current - total_mass_ref;
                         total_inst_gr = total_mass_change/(total_mass_ref*time_elapsed);
                         time_ref = time_current;
-                        mass_ref = mass_current;
+                        total_mass_ref = mass_current;
                         %inst_gr_array = [inst_gr_array; inst_gr]; %waste calculating both here, second can be calc from first
                         total_inst_gr_array((timestep/2000)-ss_start) = total_inst_gr;
                         disp(['Instantaneous growth rate: ',num2str(total_inst_gr)]);
@@ -202,7 +202,7 @@ parfor index=1:14 %run 1 %1:4 for test
                         total_mass_change = total_mass_current - total_mass_ref;
                         total_inst_gr = total_mass_change/(total_mass_ref*time_elapsed);
                         time_ref = time_current;
-                        mass_ref = mass_current;
+                        total_mass_ref = mass_current;
                         %inst_gr_array = [inst_gr_array; inst_gr]; %waste calculating both here, second can be calc from first
                         total_inst_gr_array((timestep/2000)-ss_start) = total_inst_gr;
                         disp(['Instantaneous growth rate: ',num2str(total_inst_gr)]);
