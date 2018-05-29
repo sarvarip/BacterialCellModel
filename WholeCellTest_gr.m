@@ -84,7 +84,7 @@ for timestep=1:maxsteps
                 total_mass_change = total_mass_current - total_mass_ref;
                 total_inst_gr = total_mass_change/(total_mass_ref*time_elapsed);
                 time_ref = time_current;
-                mass_ref = mass_current;
+                total_mass_ref = mass_current;
                 %inst_gr_array = [inst_gr_array; inst_gr]; %waste calculating both here, second can be calc from first
                 total_inst_gr_array((timestep/2000)-ss_start) = total_inst_gr;
                 disp(['Instantaneous growth rate: ',num2str(total_inst_gr)]);
