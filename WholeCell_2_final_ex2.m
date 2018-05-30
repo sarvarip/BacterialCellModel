@@ -3,7 +3,6 @@ function [state_array, location_array, type_idx_array, frac_total_transcript, en
     % © Peter Sarvari, Imperial College London
 
     n_s = 100; % INPUT! Change accordingly!
-    het_mass = 300; % INPUT! Change accordingly!
     het_rel_trc_rate = 1; % INPUT! Change accordingly!
     
     total_transcript = round(frac_total_transcript);
@@ -158,7 +157,7 @@ function [state_array, location_array, type_idx_array, frac_total_transcript, en
             if state_array(ribo) == length(beta_array_cell{type_idx_array(location_array(ribo))})
                 state_array(ribo) = 1;
                 location_array(ribo) = 0; %transition array is reset at end
-                old_mass = [7500, 300, 300, het_mass]*frac_P_count_vec';
+                old_mass = [7500, 300, 300]*frac_P_count_vec(1:3)';
                 frac_P_count_vec(type_idx_array(ribo_loc)) = frac_P_count_vec(type_idx_array(ribo_loc))+1;
                 P_count_vec(type_idx_array(ribo_loc)) = P_count_vec(type_idx_array(ribo_loc))+1;
                 time_P_cell{type_idx_array(ribo_loc)} = [time_P_cell{type_idx_array(ribo_loc)}, time_out];
@@ -168,7 +167,7 @@ function [state_array, location_array, type_idx_array, frac_total_transcript, en
                     transition_array = [transition_array(1:end-7), 0, transition_array(end-6:end)];
                     %disp('R protein produced');
                 end
-                new_mass = [7500, 300, 300, het_mass]*frac_P_count_vec';
+                new_mass = [7500, 300, 300]*frac_P_count_vec(1:3)';
                 ratio = new_mass/old_mass;
                 %disp('Protein Produced');
                 

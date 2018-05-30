@@ -1,6 +1,8 @@
 % © Peter Sarvari, Imperial College London
 
 clc, clear
+%version _05_29: heterologous production contributes to dilution
+%from 31_05: heterologous production does not contribute to dilution
 
 %parpool(4) %test - works, tested!
 parpool(9) %run1
@@ -30,8 +32,8 @@ parfor index=1:9 %run 1 %1:4 for test
 
     type_idx_array = [ones(1,total_transcript(1)), 2*ones(1,total_transcript(2)), 3*ones(1,total_transcript(3)), 4*ones(1,total_transcript(4))]; 
 
-    ss_start = 25000;
-    ss_end = 36000;
+    ss_start = 45000;
+    ss_end = 50000;
     maxsteps = 2000*ss_end; %~est. 10 hrs
     ref = 2000*ss_start;
 
@@ -79,7 +81,10 @@ parfor index=1:9 %run 1 %1:4 for test
                     if exists_reference == 0
                         time_ref = time(timestep+1);
                         mass_ref = zeros(1, no_types_mRNA); 
-                        for i=1:no_types_mRNA
+                        for i=1:no_types_mRNA-1
+                            %-1, because heterologous protein should not count in mass 
+                            %production, since it has no benefit to the cell and it
+                            %might be taken away from the cell constantly
                             mass_ref(i) = aac_array(i)*length(time_P_cell{i});
                         end
                         total_mass_ref = sum(mass_ref);
@@ -90,7 +95,7 @@ parfor index=1:9 %run 1 %1:4 for test
                         time_current = time(timestep+1);
                         time_elapsed = time_current - time_ref;
                         mass_current = zeros(1, no_types_mRNA); 
-                        for i=1:no_types_mRNA
+                        for i=1:no_types_mRNA-1
                             mass_current(i) = aac_array(i)*length(time_P_cell{i});
                         end
                         %mass_change = mass_current - mass_ref;
@@ -131,7 +136,7 @@ parfor index=1:9 %run 1 %1:4 for test
                     if exists_reference == 0
                         time_ref = time(timestep+1);
                         mass_ref = zeros(1, no_types_mRNA); 
-                        for i=1:no_types_mRNA
+                        for i=1:no_types_mRNA-1
                             mass_ref(i) = aac_array(i)*length(time_P_cell{i});
                         end
                         total_mass_ref = sum(mass_ref);
@@ -142,7 +147,7 @@ parfor index=1:9 %run 1 %1:4 for test
                         time_current = time(timestep+1);
                         time_elapsed = time_current - time_ref;
                         mass_current = zeros(1, no_types_mRNA); 
-                        for i=1:no_types_mRNA
+                        for i=1:no_types_mRNA-1
                             mass_current(i) = aac_array(i)*length(time_P_cell{i});
                         end
                         %mass_change = mass_current - mass_ref;
@@ -182,7 +187,7 @@ parfor index=1:9 %run 1 %1:4 for test
                     if exists_reference == 0
                         time_ref = time(timestep+1);
                         mass_ref = zeros(1, no_types_mRNA); 
-                        for i=1:no_types_mRNA
+                        for i=1:no_types_mRNA-1
                             mass_ref(i) = aac_array(i)*length(time_P_cell{i});
                         end
                         total_mass_ref = sum(mass_ref);
@@ -193,7 +198,7 @@ parfor index=1:9 %run 1 %1:4 for test
                         time_current = time(timestep+1);
                         time_elapsed = time_current - time_ref;
                         mass_current = zeros(1, no_types_mRNA); 
-                        for i=1:no_types_mRNA
+                        for i=1:no_types_mRNA-1
                             mass_current(i) = aac_array(i)*length(time_P_cell{i});
                         end
                         %mass_change = mass_current - mass_ref;
@@ -244,7 +249,7 @@ parfor index=1:9 %run 1 %1:4 for test
     disp(['Std. Inst. Growth rate: ', num2str(std_inst_growth_rate)]);
     
     
-    str = ['FYP_29_05_par_ex_', num2str(index)];
+    str = ['FYP_31_05_par_ex_', num2str(index)];
     parsave(str, total_inst_gr_array, P_count_vec_array, time_ss, total_P, transient_P, P_ss, time_elapsed, production_rate, growth_rate, avg_inst_growth_rate, std_inst_growth_rate);
     
 end
