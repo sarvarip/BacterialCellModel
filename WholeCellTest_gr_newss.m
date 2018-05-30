@@ -3,47 +3,8 @@
 clc, clear
 
 %Initialization
-no_types_mRNA = 3;
 
-total_protein_init = [5363, 7498, 191750];
-total_transcript = [85, 104, 2780];
-total_mRNA = sum(total_transcript);
-init_rates = [1,1,1];
-temp = [init_rates(1)*ones(1,total_transcript(1)), init_rates(2)*ones(1,total_transcript(2)), init_rates(3)*ones(1,total_transcript(3))]; 
-max_elongation = 126;
-aac_array = [7500, 300, 300];
-
-% cum_total_transcript = cumsum(total_transcript);
-% betas = cell(1,total_mRNA); %TO DO: SHOULD BE JUST no_types_mRNA here as well!!
-% 
-% type1_rna_mat = [1, 126*ones(1,750)];
-% betas(1:total_transcript(1)) = {type1_rna_mat}; %R, 187 copy
-% 
-% type2_rna_mat = [1, 126*ones(1,30)];
-% betas((total_transcript(1)+1):cum_total_transcript(2)) = {type2_rna_mat}; %E, 278 copy
-% 
-% type3_rna_mat = [1, 126*ones(1,30)];
-% betas((total_transcript(2)+1):cum_total_transcript(3)) = {type3_rna_mat}; %Q, 3506 copy
-
-betas = cell(1,no_types_mRNA);
-betas{1} = [init_rates(1), max_elongation*ones(1,750)]; %R
-betas{2} = [init_rates(2), max_elongation*ones(1,30)]; %E
-betas{3} = [init_rates(3), max_elongation*ones(1,30)]; %Q
-type_idx_array = [ones(1,total_transcript(1)), 2*ones(1,total_transcript(2)), 3*ones(1,total_transcript(3))]; 
-
-energy = 8078;
-S_i = 51.8;
-R0 = total_protein_init(1); 
-
-ss_start = 25000;
-ss_end = 36000;
-maxsteps = 2000*ss_end; %~est. 10 hrs
-ref = 2000*ss_start;
-time = zeros(1,maxsteps+1);
-time_P_cell = cell(1,no_types_mRNA);
-P_count_vec = total_protein_init;
-state_array = ones(1,R0);
-location_array = zeros(1,R0);
+load('FYP_29_05_endo.mat', 'P_count_vec', 'S_i', 'aac_array', 'betas', 'energy', 'init_rates', 'location_array', 'max_elongation', 'no_types_mRNA', 'maxsteps', 'ref', 'state_array', 'temp', 'total_mRNA', 'total_transcript', 'type_idx_array'); 
 
 %Iterations
 
@@ -52,15 +13,8 @@ total_inst_gr_array=zeros(1, ss_end-ss_start);
 P_count_vec_array=zeros(ss_end-ss_start+1, 3);
 time_ss = zeros(1, ss_end-ss_start+1);
 tic
-for timestep=1:maxsteps
-    if timestep == 1
-        [state_array, location_array, type_idx_array, total_transcript, energy, S_i, time(timestep+1), time_P_cell, P_count_vec, temp, transition_array] = Gillespie_STS_Prod_Rate_Multi_WholeCell_2_final(state_array, location_array, betas, type_idx_array, total_transcript, energy, S_i, time(timestep), time_P_cell, P_count_vec, temp);
-        %reconstruct the transcripts in case changes happened
-    else    
-        [state_array, location_array, type_idx_array, total_transcript, energy, S_i, time(timestep+1), time_P_cell, P_count_vec, temp, transition_array] = Gillespie_STS_Prod_Rate_Multi_WholeCell_2_final(state_array, location_array, betas, type_idx_array, total_transcript, energy, S_i, time(timestep), time_P_cell, P_count_vec, temp, transition_array);
-        %reconstruct the transcripts in case changes happened
-    end
-    
+for timestep=1:maxsteps   
+    [state_array, location_array, type_idx_array, total_transcript, energy, S_i, time(timestep+1), time_P_cell, P_count_vec, temp, transition_array] = Gillespie_STS_Prod_Rate_Multi_WholeCell_2_final(state_array, location_array, betas, type_idx_array, total_transcript, energy, S_i, time(timestep), time_P_cell, P_count_vec, temp, transition_array);
     if rem(timestep,2000)==0
         if timestep >= ref
             if exists_reference == 0
