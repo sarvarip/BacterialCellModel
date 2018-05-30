@@ -4,7 +4,7 @@ clc, clear
 
 %Initialization
 
-load('FYP_29_05_endo.mat', 'P_count_vec', 'S_i', 'aac_array', 'betas', 'energy', 'init_rates', 'location_array', 'max_elongation', 'no_types_mRNA', 'maxsteps', 'ref', 'state_array', 'temp', 'total_mRNA', 'total_transcript', 'type_idx_array'); 
+load('FYP_29_05_endo.mat', 'P_count_vec', 'S_i', 'aac_array', 'betas', 'energy', 'init_rates', 'location_array', 'max_elongation', 'no_types_mRNA', 'maxsteps', 'ref', 'ss_end', 'ss_start', 'state_array', 'temp', 'total_mRNA', 'total_transcript', 'transition_array', 'type_idx_array'); 
 
 %Iterations
 
@@ -12,6 +12,8 @@ exists_reference = 0;
 total_inst_gr_array=zeros(1, ss_end-ss_start);
 P_count_vec_array=zeros(ss_end-ss_start+1, 3);
 time_ss = zeros(1, ss_end-ss_start+1);
+time = zeros(1,maxsteps+1);
+time_P_cell = cell(1,no_types_mRNA);
 tic
 for timestep=1:maxsteps   
     [state_array, location_array, type_idx_array, total_transcript, energy, S_i, time(timestep+1), time_P_cell, P_count_vec, temp, transition_array] = Gillespie_STS_Prod_Rate_Multi_WholeCell_2_final(state_array, location_array, betas, type_idx_array, total_transcript, energy, S_i, time(timestep), time_P_cell, P_count_vec, temp, transition_array);
