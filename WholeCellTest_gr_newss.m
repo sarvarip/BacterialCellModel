@@ -75,7 +75,7 @@ end
 P_ss = total_P-transient_P;
 production_rate = P_ss/time_elapsed;
 disp(['Production rate: ', num2str(production_rate)]);
-growth_rate = (aac_array*total_P')/((aac_array*transient_P')*time_elapsed);
+growth_rate = ((aac_array*total_P')-(aac_array*transient_P'))/((aac_array*transient_P')*time_elapsed);
 disp(['Total Growth rate: ', num2str(growth_rate)]);
 avg_inst_growth_rate = mean(total_inst_gr_array);
 std_inst_growth_rate = std(total_inst_gr_array);
