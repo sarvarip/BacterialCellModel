@@ -4,7 +4,11 @@ clc, clear
 
 %Initialization
 
-load('FYP_29_05_endo.mat', 'P_count_vec', 'S_i', 'aac_array', 'betas', 'energy', 'init_rates', 'location_array', 'max_elongation', 'no_types_mRNA', 'maxsteps', 'ref', 'ss_end', 'ss_start', 'state_array', 'temp', 'total_mRNA', 'total_transcript', 'transition_array', 'type_idx_array'); 
+load('FYP_30_05_endo_newss.mat', 'P_count_vec', 'S_i', 'aac_array', 'betas', 'energy', 'init_rates', 'location_array', 'max_elongation', 'no_types_mRNA', 'state_array', 'temp', 'total_mRNA', 'total_transcript', 'transition_array', 'type_idx_array'); 
+ss_start = 30000; %45000
+ss_end = 36000; %50000
+maxsteps = 2000*ss_end; %~est. 20 hrs
+ref = 2000*ss_start;
 
 %Iterations
 
@@ -16,9 +20,10 @@ time = zeros(1,maxsteps+1);
 time_P_cell = cell(1,no_types_mRNA);
 tic
 for timestep=1:maxsteps   
-    [state_array, location_array, type_idx_array, total_transcript, energy, S_i, time(timestep+1), time_P_cell, P_count_vec, temp, transition_array] = Gillespie_STS_Prod_Rate_Multi_WholeCell_2_final(state_array, location_array, betas, type_idx_array, total_transcript, energy, S_i, time(timestep), time_P_cell, P_count_vec, temp, transition_array);
+    [state_array, location_array, type_idx_array, total_transcript, energy, S_i, time(timestep+1), time_P_cell, P_count_vec, temp, transition_array] = Gillespie_STS_Prod_Rate_Multi_WholeCell_2_final_ns_500(state_array, location_array, betas, type_idx_array, total_transcript, energy, S_i, time(timestep), time_P_cell, P_count_vec, temp, transition_array);
     if rem(timestep,2000)==0
         if timestep >= ref
+            P_count_vec_array((timestep/2000)-ss_start+1,:) = P_count_vec;
             if exists_reference == 0
                 time_ref = time(timestep+1);
                 mass_ref = zeros(1, no_types_mRNA); 
@@ -27,7 +32,6 @@ for timestep=1:maxsteps
                 end
                 total_mass_ref = sum(mass_ref);
                 exists_reference = 1;
-                P_count_vec_array((timestep/2000)-ss_start+1,:) = P_count_vec;
                 time_ss((timestep/2000)-ss_start+1) = time_ref;
             else
                 time_current = time(timestep+1);
@@ -46,7 +50,6 @@ for timestep=1:maxsteps
                 %inst_gr_array = [inst_gr_array; inst_gr]; %waste calculating both here, second can be calc from first
                 total_inst_gr_array((timestep/2000)-ss_start) = total_inst_gr;
                 disp(['Instantaneous growth rate: ',num2str(total_inst_gr)]);
-                P_count_vec_array((timestep/2000)-ss_start+1,:) = P_count_vec;
                 time_ss((timestep/2000)-ss_start+1) = time_ref;
             end
         end    
@@ -75,11 +78,22 @@ end
 P_ss = total_P-transient_P;
 production_rate = P_ss/time_elapsed;
 disp(['Production rate: ', num2str(production_rate)]);
-growth_rate = ((aac_array*total_P')-(aac_array*transient_P'))/((aac_array*transient_P')*time_elapsed);
+log_no_new = log((aac_array*total_P')/10^8 +1);
+log_no_old = log((aac_array*transient_P')/10^8 +1);
+no_generations = (log_no_new-log_no_old)/log(2);
+generation_time = (time_elapsed/60)/no_generations;
+growth_rate = 1/generation_time;
 disp(['Total Growth rate: ', num2str(growth_rate)]);
+
+%mathematically the same as 
+% log((aac_array*total_P'+10^8)/(aac_array*transient_P'+10^8))/(log(2)*time_elapsed)*60
+
+%very close to what is obtained by the above formula 
+%(aac_array*total_P'-aac_array*transient_P')/((aac_array*transient_P')*time_elapsed)*60
+
 avg_inst_growth_rate = mean(total_inst_gr_array);
 std_inst_growth_rate = std(total_inst_gr_array);
 disp(['Avg. Inst. Growth rate: ', num2str(avg_inst_growth_rate)]);
 disp(['Std. Inst. Growth rate: ', num2str(std_inst_growth_rate)]);
 
-save('FYP_30_05_endo_newss')
+save('FYP_1_06_endo_ns_500')
