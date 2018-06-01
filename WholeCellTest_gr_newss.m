@@ -17,26 +17,27 @@ total_inst_gr_array=zeros(1, ss_end-ss_start);
 P_count_vec_array=zeros(ss_end-ss_start+1, 3);
 time_ss = zeros(1, ss_end-ss_start+1);
 time = zeros(1,maxsteps+1);
-time_P_cell = cell(1,no_types_mRNA);
+%time_P_cell = cell(1,no_types_mRNA);
+load('FYP_30_05_endo_newss.mat', 'time_P_cell')
+%If cotinued, copy time_P_cell for growth rate purposes
+
 tic
 for timestep=1:maxsteps   
-    [state_array, location_array, type_idx_array, total_transcript, energy, S_i, time(timestep+1), time_P_cell, P_count_vec, temp, transition_array] = Gillespie_STS_Prod_Rate_Multi_WholeCell_2_final_ns_500(state_array, location_array, betas, type_idx_array, total_transcript, energy, S_i, time(timestep), time_P_cell, P_count_vec, temp, transition_array);
+    [state_array, location_array, type_idx_array, total_transcript, energy, S_i, time(timestep+1), time_P_cell, P_count_vec, temp, transition_array] = Gillespie_STS_Prod_Rate_Multi_WholeCell_2_final(state_array, location_array, betas, type_idx_array, total_transcript, energy, S_i, time(timestep), time_P_cell, P_count_vec, temp, transition_array);
     if rem(timestep,2000)==0
-        if timestep >= ref
-            P_count_vec_array((timestep/2000)-ss_start+1,:) = P_count_vec;
             if exists_reference == 0
                 time_ref = time(timestep+1);
-                mass_ref = zeros(1, no_types_mRNA); 
+                mass_ref = zeros(1, no_types_mRNA);
                 for i=1:no_types_mRNA
                     mass_ref(i) = aac_array(i)*length(time_P_cell{i});
                 end
                 total_mass_ref = sum(mass_ref);
                 exists_reference = 1;
-                time_ss((timestep/2000)-ss_start+1) = time_ref;
+                %time_ss((timestep/2000)-ss_start+1) = time_ref;
             else
                 time_current = time(timestep+1);
                 time_elapsed = time_current - time_ref;
-                mass_current = zeros(1, no_types_mRNA); 
+                mass_current = zeros(1, no_types_mRNA);
                 for i=1:no_types_mRNA
                     mass_current(i) = aac_array(i)*length(time_P_cell{i});
                 end
@@ -44,15 +45,19 @@ for timestep=1:maxsteps
                 %inst_gr = (mass_change./mass_ref)/time_elapsed;
                 total_mass_current = sum(mass_current);
                 total_mass_change = total_mass_current - total_mass_ref;
-                total_inst_gr = total_mass_change/(total_mass_ref*time_elapsed);
+                %Always divide by 10^8, since one cell is causing the
+                %change to happen!
+                total_inst_gr = total_mass_change/(10^8*time_elapsed)*60;
                 time_ref = time_current;
                 total_mass_ref = total_mass_current;
                 %inst_gr_array = [inst_gr_array; inst_gr]; %waste calculating both here, second can be calc from first
-                total_inst_gr_array((timestep/2000)-ss_start) = total_inst_gr;
                 disp(['Instantaneous growth rate: ',num2str(total_inst_gr)]);
-                time_ss((timestep/2000)-ss_start+1) = time_ref;
+                if timestep >= ref
+                    time_ss((timestep/2000)-ss_start+1) = time_ref;
+                    total_inst_gr_array((timestep/2000)-ss_start) = total_inst_gr;
+                    P_count_vec_array((timestep/2000)-ss_start+1,:) = P_count_vec;
+                end
             end
-        end    
         ratio = timestep/maxsteps;
         disp([num2str(100*ratio), '%']);
         disp(['Energy: ',num2str(energy)]);
@@ -78,22 +83,12 @@ end
 P_ss = total_P-transient_P;
 production_rate = P_ss/time_elapsed;
 disp(['Production rate: ', num2str(production_rate)]);
-log_no_new = log((aac_array*total_P')/10^8 +1);
-log_no_old = log((aac_array*transient_P')/10^8 +1);
-no_generations = (log_no_new-log_no_old)/log(2);
-generation_time = (time_elapsed/60)/no_generations;
-growth_rate = 1/generation_time;
+growth_rate = (aac_array*total_P'-aac_array*transient_P')/(10^8*time_elapsed)*60;
 disp(['Total Growth rate: ', num2str(growth_rate)]);
-
-%mathematically the same as 
-% log((aac_array*total_P'+10^8)/(aac_array*transient_P'+10^8))/(log(2)*time_elapsed)*60
-
-%very close to what is obtained by the above formula 
-%(aac_array*total_P'-aac_array*transient_P')/((aac_array*transient_P')*time_elapsed)*60
 
 avg_inst_growth_rate = mean(total_inst_gr_array);
 std_inst_growth_rate = std(total_inst_gr_array);
 disp(['Avg. Inst. Growth rate: ', num2str(avg_inst_growth_rate)]);
 disp(['Std. Inst. Growth rate: ', num2str(std_inst_growth_rate)]);
 
-save('FYP_1_06_endo_ns_500')
+save('FYP_1_06_endo_gr_newss')

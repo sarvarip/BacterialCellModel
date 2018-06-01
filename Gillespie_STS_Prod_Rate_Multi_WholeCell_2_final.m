@@ -1,6 +1,7 @@
 function [state_array, location_array, type_idx_array, frac_total_transcript, energy, s_i, time_out, time_P_cell, frac_P_count_vec, temp, transition_array] = Gillespie_STS_Prod_Rate_Multi_WholeCell_2_final (state_array, location_array, beta_array_cell, type_idx_array, frac_total_transcript, energy, s_i, time_in, time_P_cell, frac_P_count_vec, temp, transition_array)
     
     % © Peter Sarvari, Imperial College London
+    
 
     n_s = 100; % INPUT! Change accordingly!
     
