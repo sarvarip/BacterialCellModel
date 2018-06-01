@@ -7,9 +7,9 @@ clc, clear
 %parpool(4) %test - works, tested!
 parpool(9) %run1
 
-parfor index=1:9 %run 1 %1:4 for test
-%parfor index=10:18 %run2
-%parfor index=19:27 %run3
+parfor index=0:8 %run 1 %1:4 for test
+%parfor index=9:17 %run2
+%parfor index=18:26 %run3
 
     %Heterologous version
     %Initialization
@@ -27,8 +27,8 @@ parfor index=1:9 %run 1 %1:4 for test
 
     codon_choice = zeros(3,30);
     codon_choice(1,:) = max_elongation*ones(1,30);
-    codon_choice(2,:) = max_elongation*[ones(1,9), 0.1, ones(1,20)];
-    codon_choice(3,:) = max_elongation*[ones(1,20), 0.1, ones(1,9)];
+    codon_choice(2,:) = max_elongation*[ones(1,9), 0.001, ones(1,20)];
+    codon_choice(3,:) = max_elongation*[ones(1,20), 0.001, ones(1,9)];
 
     type_idx_array = [ones(1,total_transcript(1)), 2*ones(1,total_transcript(2)), 3*ones(1,total_transcript(3)), 4*ones(1,total_transcript(4))]; 
 
@@ -38,9 +38,9 @@ parfor index=1:9 %run 1 %1:4 for test
     ref = 2000*ss_start;
 
     base3 = dec2base(index,3,3);
-    j = str2double(base3(1))+1; %transcription rate option - function call
+    j = str2double(base3(3))+1; %transcription rate option - function call
     k = str2double(base3(2))+1; %initiation rate option - het_init_array index
-    l = str2double(base3(3))+1; %codon options - codon choice array row index
+    l = str2double(base3(1))+1; %codon options - codon choice array row index
 
 
     betas = cell(1,no_types_mRNA);
@@ -268,7 +268,7 @@ parfor index=1:9 %run 1 %1:4 for test
     disp(['Std. Inst. Growth rate: ', num2str(std_inst_growth_rate)]);
     
     
-    str = ['FYP_31_05_par_ex_', num2str(index)];
+    str = ['FYP_02_06_par_ex_', num2str(index)];
     parsave(str, total_inst_gr_array, P_count_vec_array, time_ss, total_P, transient_P, P_ss, time_elapsed, production_rate, growth_rate, avg_inst_growth_rate, std_inst_growth_rate);
     
 end
