@@ -13,7 +13,7 @@ ref = 2000*ss_start;
 %Iterations
 
 exists_reference = 0;
-total_inst_gr_array=zeros(1, ss_end-ss_start);
+total_inst_gr_array=zeros(1, ss_end-ss_start+1);
 P_count_vec_array=zeros(ss_end-ss_start+1, 3);
 time_ss = zeros(1, ss_end-ss_start+1);
 time = zeros(1,maxsteps+1);
@@ -25,39 +25,39 @@ tic
 for timestep=1:maxsteps   
     [state_array, location_array, type_idx_array, total_transcript, energy, S_i, time(timestep+1), time_P_cell, P_count_vec, temp, transition_array] = Gillespie_STS_Prod_Rate_Multi_WholeCell_2_final(state_array, location_array, betas, type_idx_array, total_transcript, energy, S_i, time(timestep), time_P_cell, P_count_vec, temp, transition_array);
     if rem(timestep,2000)==0
-            if exists_reference == 0
-                time_ref = time(timestep+1);
-                mass_ref = zeros(1, no_types_mRNA);
-                for i=1:no_types_mRNA
-                    mass_ref(i) = aac_array(i)*length(time_P_cell{i});
-                end
-                total_mass_ref = sum(mass_ref);
-                exists_reference = 1;
-                %time_ss((timestep/2000)-ss_start+1) = time_ref;
-            else
-                time_current = time(timestep+1);
-                time_elapsed = time_current - time_ref;
-                mass_current = zeros(1, no_types_mRNA);
-                for i=1:no_types_mRNA
-                    mass_current(i) = aac_array(i)*length(time_P_cell{i});
-                end
-                %mass_change = mass_current - mass_ref;
-                %inst_gr = (mass_change./mass_ref)/time_elapsed;
-                total_mass_current = sum(mass_current);
-                total_mass_change = total_mass_current - total_mass_ref;
-                %Always divide by 10^8, since one cell is causing the
-                %change to happen!
-                total_inst_gr = total_mass_change/(10^8*time_elapsed)*60;
-                time_ref = time_current;
-                total_mass_ref = total_mass_current;
-                %inst_gr_array = [inst_gr_array; inst_gr]; %waste calculating both here, second can be calc from first
-                disp(['Instantaneous growth rate: ',num2str(total_inst_gr)]);
-                if timestep >= ref
-                    time_ss((timestep/2000)-ss_start+1) = time_ref;
-                    total_inst_gr_array((timestep/2000)-ss_start) = total_inst_gr;
-                    P_count_vec_array((timestep/2000)-ss_start+1,:) = P_count_vec;
-                end
+        if exists_reference == 0
+            time_ref = time(timestep+1);
+            mass_ref = zeros(1, no_types_mRNA);
+            for i=1:no_types_mRNA
+                mass_ref(i) = aac_array(i)*length(time_P_cell{i});
             end
+            total_mass_ref = sum(mass_ref);
+            exists_reference = 1;
+            %time_ss((timestep/2000)-ss_start+1) = time_ref;
+        else
+            time_current = time(timestep+1);
+            time_elapsed = time_current - time_ref;
+            mass_current = zeros(1, no_types_mRNA);
+            for i=1:no_types_mRNA
+                mass_current(i) = aac_array(i)*length(time_P_cell{i});
+            end
+            %mass_change = mass_current - mass_ref;
+            %inst_gr = (mass_change./mass_ref)/time_elapsed;
+            total_mass_current = sum(mass_current);
+            total_mass_change = total_mass_current - total_mass_ref;
+            %Always divide by 10^8, since one cell is causing the
+            %change to happen!
+            total_inst_gr = total_mass_change/(10^8*time_elapsed)*60;
+            time_ref = time_current;
+            total_mass_ref = total_mass_current;
+            %inst_gr_array = [inst_gr_array; inst_gr]; %waste calculating both here, second can be calc from first
+            disp(['Instantaneous growth rate: ',num2str(total_inst_gr)]);
+            if timestep >= ref
+                time_ss((timestep/2000)-ss_start+1) = time_ref;
+                total_inst_gr_array((timestep/2000)-ss_start+1) = total_inst_gr;
+                P_count_vec_array((timestep/2000)-ss_start+1,:) = P_count_vec;
+            end
+        end
         ratio = timestep/maxsteps;
         disp([num2str(100*ratio), '%']);
         disp(['Energy: ',num2str(energy)]);
