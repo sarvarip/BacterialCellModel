@@ -7,7 +7,7 @@ clc, clear
 %difference, 0.001 essentially no elongation and energy going up)
 
 %parpool(4) %test - works, tested!
-%parpool(14) %run1
+parpool(14) %run1
 %parpool(13) %run2
 
 load('FYP_30_05_endo_newss.mat', 'P_count_vec', 'S_i', 'energy', 'location_array', 'state_array', 'temp', 'total_mRNA', 'total_transcript', 'transition_array', 'type_idx_array'); 
@@ -22,7 +22,7 @@ temp_init = temp;
 transition_array_init = transition_array;
 type_idx_array_init = type_idx_array;
 
-parfor index=0:3 %run 1
+parfor index=0:13 %run 1
 %parfor index=14:26 %run2
 
     %Heterologous version
@@ -44,8 +44,8 @@ parfor index=0:3 %run 1
     max_elongation = 126;
     R0 = total_protein_init(1); 
 
-    ss_start = 15; %9000
-    ss_end = 20; %10000
+    ss_start = 9000; %9000
+    ss_end = 10000; %10000
     maxsteps = 10000*ss_end; 
     ref = 10000*ss_start;
 
