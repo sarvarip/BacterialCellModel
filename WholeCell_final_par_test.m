@@ -7,7 +7,7 @@ clc, clear
 %difference, 0.001 essentially no elongation and energy going up)
 
 %parpool(4) %test - works, tested!
-parpool(14) %run1
+parpool(10) %run1
 %parpool(13) %run2
 
 load('FYP_30_05_endo_newss.mat', 'P_count_vec', 'S_i', 'energy', 'location_array', 'state_array', 'temp', 'total_mRNA', 'total_transcript', 'transition_array', 'type_idx_array'); 
@@ -22,7 +22,7 @@ temp_init = temp;
 transition_array_init = transition_array;
 type_idx_array_init = type_idx_array;
 
-parfor index=0:13 %run 1
+parfor index=14:23 %run 1
 %parfor index=14:26 %run2
 
     %Heterologous version
@@ -77,8 +77,8 @@ parfor index=0:13 %run 1
 
     exists_reference = 0;
     
-    total_inst_gr_array=zeros(1, ss_end-ss_start+1);
-    %time_ss = zeros(1, ss_end-ss_start+1);
+    total_inst_gr_array=zeros(1, ss_end+1);
+    time_ss = zeros(1, ss_end+1);
     
     P_count_vec_array=zeros(ss_end+1, 4);
     P_count_vec_array(1,:) = P_count_vec;
@@ -123,10 +123,8 @@ parfor index=0:13 %run 1
                     disp(['Instantaneous growth rate: ',num2str(total_inst_gr)]);
                     P_count_vec_array((timestep/10000)+1,:) = P_count_vec;
                     energy_array((timestep/10000)+1) = energy;
-                    if timestep >= ref
-                        %time_ss((timestep/10000)-ss_start+1) = time_ref;
-                        total_inst_gr_array((timestep/10000)-ss_start+1) = total_inst_gr;
-                    end
+                    time_ss((timestep/10000)+1) = time_ref;
+                    total_inst_gr_array((timestep/10000)+1) = total_inst_gr;
                 end
                 
             ratio = timestep/maxsteps;
