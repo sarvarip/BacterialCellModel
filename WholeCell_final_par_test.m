@@ -173,12 +173,12 @@ parfor index=14:23 %run 1
     %approx.
     %(aac_array*total_P'-aac_array*transient_P')/(10^8*time_elapsed)*60
 
-    avg_inst_growth_rate = mean(total_inst_gr_array);
-    std_inst_growth_rate = std(total_inst_gr_array);
+    avg_inst_growth_rate = mean(total_inst_gr_array(ss_start+1:end));
+    std_inst_growth_rate = std(total_inst_gr_array(ss_start+1:end));
     disp(['Avg. Inst. Growth rate: ', num2str(avg_inst_growth_rate)]);
     disp(['Std. Inst. Growth rate: ', num2str(std_inst_growth_rate)]);
     
     str = ['FYP_04_06_par_ex_', num2str(index)];
-    parsave_final(str, state_array, location_array, type_idx_array, temp, energy, energy_array, S_i, total_transcript, total_inst_gr_array, P_count_vec_array, total_P, transient_P, P_ss, time_elapsed, production_rate, growth_rate, avg_inst_growth_rate, std_inst_growth_rate);
+    parsave_final(str, time_ss, state_array, location_array, type_idx_array, temp, energy, energy_array, S_i, total_transcript, total_inst_gr_array, P_count_vec_array, total_P, transient_P, P_ss, time_elapsed, production_rate, growth_rate, avg_inst_growth_rate, std_inst_growth_rate);
     
 end
