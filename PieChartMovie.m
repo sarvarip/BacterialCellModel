@@ -1,5 +1,5 @@
 close all
-load('FYP_04_06_par_ex_13')
+%load('FYP_04_06_par_ex_21')
 idx = 1;
 aac_array = [7500, 300, 300, 300];
 for i = 1:10:4000
@@ -7,6 +7,7 @@ for i = 1:10:4000
     if P_count_vec_array(i, 4) == 0
         ax1 = axes('Position',[0.2 0.1 0.7 0.7],'Box','off');
         ax2 = axes('Position',[0.1 0.7 0.2 0.2],'Box','off');
+        ax3 = axes('Position',[0.1 0.1 0.2 0.2],'Box','off');
         ax = axes('Position',[0 0 1 1],'Box','off');
         axes(ax1)
         label = {'R-proteins: ', 'Enzyme: ', 'Housekeeping: '};
@@ -53,12 +54,19 @@ for i = 1:10:4000
           .5 .5 .5])  %// grey
         hText(4).String = combinedtxt(4);
     end
-    title('Proteome partition', 'FontSize', 15);
+    title(['Proteome partition, time = ', num2str(time_ss(i))], 'FontSize', 15);
     axes(ax2);
     bar(energy_array(i), 'c')
     ylim([0 15000])
     title('Energy', 'FontSize', 15);
+    ylabel('a.u.', 'FontSize', 15);
     set(gca,'xticklabel','')
+    axes(ax3);
+    bar(total_inst_gr_array(i), 'm')
+    title('Inst. Growth Rate', 'FontSize', 15);
+    set(gca,'xticklabel','')
+    ylabel('Hr^-^1', 'FontSize', 15);
+    ylim([0 3])
     fig = gcf;
     fig.CurrentAxes = ax;
     M(idx) = getframe;
@@ -72,6 +80,7 @@ for i = 4100:100:10000
     figure
     ax1 = axes('Position',[0.2 0.1 0.7 0.7],'Box','off');
     ax2 = axes('Position',[0.1 0.7 0.2 0.2],'Box','off');
+    ax3 = axes('Position',[0.1 0.1 0.2 0.2],'Box','off');
     ax = axes('Position',[0 0 1 1],'Box','off');
     axes(ax1)
     label = {'R-proteins', 'Enzyme', 'Housekeeping', 'Heterologous'};
@@ -94,12 +103,19 @@ for i = 4100:100:10000
     hText(1).String = combinedtxt(1);
     hText(2).String = combinedtxt(2);
     hText(3).String = combinedtxt(3);
-    title('Proteome partition', 'FontSize', 15);
+    title(['Proteome partition, time = ', num2str(time_ss(i))], 'FontSize', 15);
     axes(ax2);
     bar(energy_array(i), 'c')
     ylim([0 15000])
     title('Energy', 'FontSize', 15);
+    ylabel('a.u.', 'FontSize', 15);
     set(gca,'xticklabel','')
+    axes(ax3);
+    bar(total_inst_gr_array(i), 'm')
+    title('Inst. Growth Rate', 'FontSize', 15);
+    set(gca,'xticklabel','')
+    ylabel('Hr^-^1', 'FontSize', 15);
+    ylim([0 3])
     fig = gcf;
     fig.CurrentAxes = ax;
     M(idx) = getframe;
@@ -109,7 +125,7 @@ for i = 4100:100:10000
     hold off
     close
 end
-video = VideoWriter('04_06_ex13_2.avi', 'Uncompressed AVI');
+video = VideoWriter('04_06_ex21.avi', 'Uncompressed AVI');
 video.FrameRate = 15;  % Default 30
 open(video)
 writeVideo(video, M);
