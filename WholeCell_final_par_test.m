@@ -82,7 +82,7 @@ parfor index=14:23 %run 1
     
     P_count_vec_array=zeros(ss_end+1, 4);
     P_count_vec_array(1,:) = P_count_vec;
-    energy_array = zeros(ss_end+1);
+    energy_array = zeros(1, ss_end+1);
     energy_array(1) = energy;
     
     tic
