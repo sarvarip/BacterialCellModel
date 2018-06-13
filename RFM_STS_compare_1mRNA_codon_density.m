@@ -14,7 +14,7 @@ u = R0-pi_1-pi_2;
 
 %recursive series solution gives same result
 
-R0 = 10;
+R0 = 25;
 syms X
 lambda = [0.1, 1, 1]; 
 len = length(lambda);
@@ -32,7 +32,7 @@ F = sum(frac) + X - R0;
 
 soln_series = solve(F, 'Real', true, 'MaxDegree', 3);
 pi_2_series = eval(soln_series(eval(soln_series)<1&eval(soln_series)>=0));
-X = pi_2_series;
+X = pi_2_series; %0.4479
 pi_1_series = eval(subs(frac(1)));
 u_series = eval(subs(frac(2)));
 
@@ -43,7 +43,7 @@ clear
 
 lambda = [0.1, 1, 1, 1]; 
 len = length(lambda);
-R0 = 10;
+R0 = 25;
 syms X
 
 n = sym('n', [len-1,1]); %create symbolic arrays otherwise, cannot convert symbolic to double
@@ -66,10 +66,10 @@ pi_3_series = vpa(soln_series(vpa(soln_series)<1&vpa(soln_series)>=0));
 % r = roots([1 -9001/750 +14626/375 -9067/200 63001/3000 -10/3]); %last three is possible
 % pi_3_series = r(5); %choose last
 
-X = pi_3_series; %0.3820
-pi_2_series = eval(subs(frac(1))); %0.618
-pi_1_series = eval(subs(frac(2))); %indeed since initiation rate is huge, this is almost 1
-u_series = eval(subs(frac(3))); %8
+X = pi_3_series; %0.363
+pi_2_series = eval(subs(frac(1))); 
+pi_1_series = eval(subs(frac(2))); 
+u_series = eval(subs(frac(3))); 
 
 %% Now try with length 5, 6th order poly
 
@@ -77,7 +77,7 @@ clear
 
 lambda = [0.1, 1, 1, 1, 1]; 
 len = length(lambda);
-R0 = 10;
+R0 = 25;
 syms X
 
 n = sym('n', [len-1,1]); %create symbolic arrays otherwise, cannot convert symbolic to double
@@ -94,11 +94,11 @@ F = sum(frac) + X - R0;
 soln_series = solve(F, 'MaxDegree', 6);
 pi_4_series = vpa(soln_series(vpa(soln_series)<1&vpa(soln_series)>=0)); %seems that always the first (smallest soln) is correct
 
-X = pi_4_series; %0.333
-pi_3_series = eval(subs(frac(1))); %0.5
-pi_2_series = eval(subs(frac(2))); %0.667
-pi_1_series = eval(subs(frac(3)));%indeed since initiation rate is huge, this is almost 1
-u_series = eval(subs(frac(4))); %7.5
+X = pi_4_series; %0.324
+pi_3_series = eval(subs(frac(1))); 
+pi_2_series = eval(subs(frac(2))); 
+pi_1_series = eval(subs(frac(3)));
+u_series = eval(subs(frac(4))); 
 
 %% length 8
 
@@ -106,7 +106,7 @@ clear
 
 lambda = [0.1, 1, 1, 1, 1, 1, 1, 1]; 
 len = length(lambda);
-R0 = 10;
+R0 = 25;
 syms X
 
 n = sym('n', [len-1,1]); %create symbolic arrays otherwise, cannot convert symbolic to double
@@ -123,13 +123,13 @@ F = sum(frac) + X - R0;
 soln_series = solve(F, 'MaxDegree', 10);
 pi_7_series = vpa(soln_series(vpa(soln_series)<1&vpa(soln_series)>=0)); %seems that always the first (smallest soln) is correct
 
-X = pi_7_series; %0.2831
-pi_6_series = eval(subs(frac(1))); %0.3949
-pi_5_series = eval(subs(frac(2))); %0.4679
-pi_4_series = eval(subs(frac(3))); %0.5321
-pi_3_series = eval(subs(frac(4))); %0.6051
-pi_2_series = eval(subs(frac(5))); %0.7169
-pi_1_series = eval(subs(frac(6)));%indeed since initiation rate is huge, this is almost 1
+X = pi_7_series; %0.281
+pi_6_series = eval(subs(frac(1))); 
+pi_5_series = eval(subs(frac(2))); 
+pi_4_series = eval(subs(frac(3))); 
+pi_3_series = eval(subs(frac(4))); 
+pi_2_series = eval(subs(frac(5))); 
+pi_1_series = eval(subs(frac(6)));
 u_series = eval(subs(frac(7))); 
 
 %% length 20 - 70 solutions! (took ~5 mins)
@@ -163,6 +163,9 @@ for j = length(lambda)-1:-1:1
     pi_n_series(j) = eval(subs(frac(length(lambda)-j)));
 end
 
+disp(pi_n_series); 
+disp(pi_19_series);
+
 %% Compare this to Gillespie
 
 R0 = 25;
@@ -175,8 +178,7 @@ state_saved = zeros(maxsteps-ss,R0); %Assuming that stationary distribution is a
 total_mRNA = 1;
 type_mRNA = 1;
 betas = cell(1,type_mRNA);
-betas{1} = ones(1,20); %3, 4, 5, 8, 20 -> gets better and better as length increases
-betas{1}(1) = 0.1; %can increase to infinity, coverage still stays at 0.5, if decrease then happens what expected 
+betas{1} = [0.1 ones(1,19)]; %3, 4, 5, 8, 20 -> gets better and better as length increases
 type_idx_array = [1]; %DON'T forget to change this line!
 %figure(1)
 %hold on
@@ -187,7 +189,7 @@ for sim=1:no_sims
     P_count_vec = zeros(1,total_mRNA);
     state_array = ones(1,R0);
     location_array = zeros(1,R0);
-    temp = [1]; %DON'T forget to change this line!
+    temp = [0.1]; %DON'T forget to change this line! Initiation rate!!!
     for timestep=1:maxsteps
         if timestep == 1
             [state_array, location_array, time(sim,timestep+1), time_P_cell, P_count_vec, temp, transition_array] = Gillespie_STS_Prod_Rate_Multi_v6(state_array, location_array, betas, type_idx_array, time(sim,timestep), time_P_cell, P_count_vec, temp);
@@ -220,14 +222,14 @@ time = zeros(no_sims,maxsteps+1);
 total_mRNA = 1;
 type_mRNA = 1;
 betas = cell(1,type_mRNA);
-betas{1} = ones(1,20); %3, 4, 5, 8, 20 -> gets better and better as length increases
-betas{1}(1) = 0.1; %can increase to infinity, coverage still stays at 0.5, if decrease then happens what expected 
+betas{1} = [0.1 ones(1,19)]; %3, 4, 5, 8, 20 -> gets better and better as length increases
 type_idx_array = [1]; %DON'T forget to change this line!
 time_P_cell = cell(1,total_mRNA);
 P_count_vec = zeros(1,total_mRNA);
 state_array = ones(1,R0);
 location_array = zeros(1,R0);
-temp = [1]; %DON'T forget to change this line!
+temp = [0.1]; %DON'T forget to change this line! Initiation rate!!!
+sim = 1;
 for timestep=1:maxsteps
     if timestep == 1
         [state_array, location_array, time(sim,timestep+1), time_P_cell, P_count_vec, temp, transition_array] = Gillespie_STS_Prod_Rate_Multi_v6(state_array, location_array, betas, type_idx_array, time(sim,timestep), time_P_cell, P_count_vec, temp);
