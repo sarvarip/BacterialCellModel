@@ -4,12 +4,12 @@ clc, clear
 
 %Initialization
 
-load('FYP_30_05_endo_newss', 'P_count_vec', 'S_i', 'aac_array', 'betas', 'energy', 'init_rates', 'location_array', 'max_elongation', 'no_types_mRNA', 'state_array', 'temp', 'total_mRNA', 'total_transcript', 'transition_array', 'type_idx_array'); 
+load('FYP_5_06_endo_gr_newss_ns_400', 'P_count_vec', 'S_i', 'aac_array', 'betas', 'energy', 'init_rates', 'location_array', 'max_elongation', 'no_types_mRNA', 'state_array', 'temp', 'total_mRNA', 'total_transcript', 'transition_array', 'type_idx_array'); 
 ss_start = 30000; %45000
 ss_end = 36000; %50000
 maxsteps = 2000*ss_end; %~est. 20 hrs
 ref = 2000*ss_start;
-n_s = 50;
+n_s = 500;
 
 %Iterations
 
@@ -18,8 +18,8 @@ total_inst_gr_array=zeros(1, ss_end-ss_start+1);
 P_count_vec_array=zeros(ss_end-ss_start+1, 3);
 time_ss = zeros(1, ss_end-ss_start+1);
 time = zeros(1,maxsteps+1);
-%time_P_cell = cell(1,no_types_mRNA);
-load('FYP_30_05_endo_newss.mat', 'time_P_cell')
+time_P_cell = cell(1,no_types_mRNA);
+%load('FYP_30_05_endo_newss.mat', 'time_P_cell')
 %If cotinued, copy time_P_cell for growth rate purposes
 
 tic
@@ -92,7 +92,7 @@ std_inst_growth_rate = std(total_inst_gr_array);
 disp(['Avg. Inst. Growth rate: ', num2str(avg_inst_growth_rate)]);
 disp(['Std. Inst. Growth rate: ', num2str(std_inst_growth_rate)]);
 
-save('FYP_7_06_endo_gr_newss_ns_50')
+save('FYP_7_06_endo_gr_newss_ns_500')
 
 
 %Piechart
@@ -129,13 +129,13 @@ title(['Endogenous Proteome partition n_s=',num2str(n_s)] , 'FontSize', 15); %CH
 axes(ax2);
 bar((energy), 'c')
 title('Energy', 'FontSize', 15);
-ylabel('a.u.', 'FontSize', 15);
+ylabel('Arb. unit', 'FontSize', 15);
 set(gca,'xticklabel','')
 axes(ax3);
 bar(([avg_inst_growth_rate, std_inst_growth_rate]), 'm')
 title('Inst. Growth Rate', 'FontSize', 15);
 set(gca,'xticklabel',{'Average', 'Std'}, 'FontSize', 15)
-ylabel('Hr^-^1', 'FontSize', 15);
+ylabel('h^-^1', 'FontSize', 15);
 fig = gcf;
 fig.CurrentAxes = ax;
 ax.Units = 'normalized';
