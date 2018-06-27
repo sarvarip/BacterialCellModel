@@ -5,12 +5,13 @@ one = [1 1 1 1 1 1 1];
 gr1 = [one; gr]';
 regression = gr1\r';
 yCalc = regression(2)*gr+regression(1);
-scatter(gr,r,'LineWidth',2)
+scatter(gr,r,200,'filled')
 hold on
-plot(gr, yCalc, 'LineWidth',2)
+plot(gr, yCalc, 'LineWidth',4)
+set(gca,'fontsize',20)
 h = legend('Model results', 'Linear regression');
-h.FontSize = 15;
+h.FontSize = 20;
 h.Location = 'southeast';
 title('Dependence of mRNA/protein ratio on growth rate', 'FontSize', 20);
-xlabel('Growth rate (h^-^1)', 'FontSize', 15);
-ylabel('mRNA/protein mass ratio', 'FontSize', 15);
+xlabel('Growth rate (h^-^1)', 'FontSize', 20);
+ylabel('mRNA/protein mass ratio', 'FontSize', 20);
