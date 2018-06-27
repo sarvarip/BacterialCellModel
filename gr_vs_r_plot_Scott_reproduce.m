@@ -12,5 +12,5 @@ h = legend('Model results', 'Linear regression');
 h.FontSize = 15;
 h.Location = 'southeast';
 title('Dependence of mRNA/protein ratio on growth rate', 'FontSize', 20);
-xlabel('Growth rate', 'FontSize', 15);
-ylabel('mRNA/protein ratio', 'FontSize', 15);
+xlabel('Growth rate (h^-^1)', 'FontSize', 15);
+ylabel('mRNA/protein mass ratio', 'FontSize', 15);
