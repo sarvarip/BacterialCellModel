@@ -1,5 +1,10 @@
 # Explanation of scripts
 
+### Endogenous results
+Please see the folder called endogenous.
+
+### Heterologous results
+
 #### Simulation1 and Simulation2: 
 Heterologous simulation scripts that load an endogenous simulation result and then simulate adding a heterologous construct to the bacteria. The two scripts are identical, except for having different index_array and Simulation 2 running twice as many iterations. Simulation 2 includes the cases (specified by index_array) that generally converge slower (see convergence definition), hence the increased number of iterations. We ran these two scripts on HPC servers to get results for the case when the heterologous mRNA has 60 ribosome footprints (as opposed to 30, see below). Note that depending on the available nodes, we changed index_array, but left the rest of the script unchanged. We used these scripts to get a converged output for each of the cases (9 endogenous, 9 heterologous with slow codon at 5th position and 9 heterologous with slow codon at 55th position). 
 
