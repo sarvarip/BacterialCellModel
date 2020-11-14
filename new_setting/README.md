@@ -1,3 +1,6 @@
+# Simulation visualization on Youtube
+https://www.youtube.com/watch?v=EPMutCumilk&feature=youtu.be
+
 # Explanation of scripts
 
 ### Endogenous results
