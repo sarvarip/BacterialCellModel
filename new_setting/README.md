@@ -14,10 +14,8 @@ Heterologous simulation scripts that load an endogenous simulation result and th
 #### Whole_cell_final_par:
 The function that is called by all simulation scripts. It calculates the output at the (t+1)th timestep given the (t)th timestep as input. It uses Gillespie-like stochastic simulation. (Gillespie-like because the transition matrix is time-variant: for example, some ribosomes will be temporarily restricted from moving when they are blocked by ribosomes ahead - see Figure 2)
 
-#### Whole_cell_final_par_newsetting, Whole_cell_final_par_newsetting_003, Whole_cell_final_par_newsetting_0005:
+#### Whole_cell_final_par_wrapper, Whole_cell_final_par_wrapper_003, Whole_cell_final_par_wrapper_0005:
 These are heterologous simulation scripts, very similar to Simulation1 and Simulation 2 above. The difference is that these scripts consider the case when the heterologous mRNA has 30 ribosome places (as opposed to 60, see above). In addition, Whole_cell_final_par_newsetting considers slow codons with relative speeds of 0.03 and 0.005. Whole_cell_final_par_newsetting has been broken down to two scripts that were run on two different servers. Whole_cell_final_par_newsetting_003 considers only the 0.03 slow codon speed case, whereas Whole_cell_final_par_newsetting_0005 considers only the 0.005 slow codon speed case. The results are clearer in the latter case as the slower codon speed emhasizes the ribosome sequestration and burden. 
-
-Note: New setting refers to the relative promoter and RBS strengths of 1/3, 1 and 3. In previous versions we used different numbers. 
 
 #### mode_least and parsave_final:
 Helper functions that are called by the simulation scripts. 
