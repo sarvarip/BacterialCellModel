@@ -1,5 +1,5 @@
 # TranslationModels
-Stochastic whole cell model with detailed description of resource-limited translation: Models incorporates slow codons, finite energy, finite ribosomes and finite proteome
+Stochastic whole cell model with detailed description of resource-limited translation: Model incorporates slow codons, finite energy, finite ribosomes and finite proteome
 
 See the folder called new_setting for the most recent version of the framework now submitted to Biology.
 
