@@ -1,4 +1,4 @@
-# Simulation visualization on Youtube
+# Simulation visualization on YouTube
 https://www.youtube.com/watch?v=EPMutCumilk&feature=youtu.be
 
 # Explanation of scripts
