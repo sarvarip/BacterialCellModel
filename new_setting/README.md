@@ -58,9 +58,8 @@ Array, which has length equal to the number of mRNAs. Each element denotes which
 `production_rate(4)`
 
 #### Get ribosome density:
-`state_a = state_array(state_array>1);
-location_a = location_array(location_array>0);
-hist(state_a(type_idx_array(location_a)==4)-1,30)`
+`[counts, ] = histcounts(state_a(type_idx_array(location_a)==4)-1,30);
+bar(1:30, counts)`
 
 #### Heterologous mass fraction calculation (mean over some time range after convergence is achieved):
 `100 * (mean(P_count_vec_array(36000:end,4))*300) / ( mean(P_count_vec_array(36000:end,1))*7500 + mean(P_count_vec_array(36000:end,2))*300 + mean(P_count_vec_array(36000:end,3))*300 + mean(P_count_vec_array(36000:end,4))*300 )`
