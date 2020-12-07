@@ -72,7 +72,7 @@ bar(1:30, counts)`
 upper = 1.01*th;
 lower = 0.99 * th;
 plot(time_ss, P_count_vec_array(:,4));
-hold on
+hold on;
 plot(time_ss, upper*ones(length(time_ss),1));
 plot(time_ss, lower*ones(length(time_ss),1));
 plot(0.9*time_ss(end)*ones(length(time_ss),1), linspace(1,P_count_vec_array(end,4),length(time_ss)))`
