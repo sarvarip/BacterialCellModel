@@ -68,13 +68,13 @@ bar(1:30, counts)`
 `100 * (mean(P_count_vec_array(36000:end,4))*300) / ( mean(P_count_vec_array(36000:end,1))*7500 + mean(P_count_vec_array(36000:end,2))*300 + mean(P_count_vec_array(36000:end,3))*300 + mean(P_count_vec_array(36000:end,4))*300 )`
 
 #### Check for convergence:
-`th = mean(P_count_vec_array(0.9*end:end,4))
-upper = 1.01*th
-lower = 0.99 * th
-plot(time_ss, P_count_vec_array(:,4))
+`th = mean(P_count_vec_array(0.9*end:end,4));
+upper = 1.01*th;
+lower = 0.99 * th;
+plot(time_ss, P_count_vec_array(:,4));
 hold on
-plot(time_ss, upper*ones(length(time_ss),1))
-plot(time_ss, lower*ones(length(time_ss),1))
+plot(time_ss, upper*ones(length(time_ss),1));
+plot(time_ss, lower*ones(length(time_ss),1));
 plot(0.9*time_ss(end)*ones(length(time_ss),1), linspace(1,P_count_vec_array(end,4),length(time_ss)))`
 
 
