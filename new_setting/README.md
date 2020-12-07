@@ -69,14 +69,11 @@ bar(1:30, counts)`
 
 #### Heterologous mass fractions pie chart:
 `X = [ mean(P_count_vec_array(round(0.9*end):end,1))*7500, mean(P_count_vec_array(round(0.9*end):end,2))*300, mean(P_count_vec_array(round(0.9*end):end,3))*300, mean(P_count_vec_array(round(0.9*end):end,4))*300 ];
-
 p = pie(X);
-
 pText = findobj(p,'Type','text');
 percentValues = get(pText,'String'); 
 txt = {'R-proteins: '; 'Enzymatic: '; 'Housekeeping: '; 'Heterologous: '}; 
 combinedtxt = strcat(txt,percentValues); 
-
 pText(1).String = combinedtxt(1);
 pText(2).String = combinedtxt(2);
 pText(3).String = combinedtxt(3);
