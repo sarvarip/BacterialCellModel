@@ -62,10 +62,25 @@ Array, which has length equal to the number of mRNAs. Each element denotes which
 bar(1:30, counts)`
 
 #### Heterologous mass fraction calculation (mean over some time range after convergence is achieved):
-`100 * (mean(P_count_vec_array(36000:end,4))*300) / ( mean(P_count_vec_array(36000:end,1))*7500 + mean(P_count_vec_array(36000:end,2))*300 + mean(P_count_vec_array(36000:end,3))*300 + mean(P_count_vec_array(36000:end,4))*300 )`
+`100 * (mean(P_count_vec_array(round(0.9*end):end,4))*300) / ( mean(P_count_vec_array(round(0.9*end):end,1))*7500 + mean(P_count_vec_array(round(0.9*end):end,2))*300 + mean(P_count_vec_array(round(0.9*end):end,3))*300 + mean(P_count_vec_array(round(0.9*end):end,4))*300 )`
 
 #### Heterologous mass fraction standard deviation:
-`100 * (mean(P_count_vec_array(36000:end,4))*300) / ( mean(P_count_vec_array(36000:end,1))*7500 + mean(P_count_vec_array(36000:end,2))*300 + mean(P_count_vec_array(36000:end,3))*300 + mean(P_count_vec_array(36000:end,4))*300 )`
+`100 * (mean(P_count_vec_array(round(0.9*end):end,4))*300) / ( mean(P_count_vec_array(round(0.9*end):end,1))*7500 + mean(P_count_vec_array(round(0.9*end):end,2))*300 + mean(P_count_vec_array(round(0.9*end):end,3))*300 + mean(P_count_vec_array(round(0.9*end):end,4))*300 )`
+
+#### Heterologous mass fractions pie chart:
+`X = [ mean(P_count_vec_array(round(0.9*end):end,1))*7500, mean(P_count_vec_array(round(0.9*end):end,2))*300, mean(P_count_vec_array(round(0.9*end):end,3))*300, mean(P_count_vec_array(round(0.9*end):end,4))*300 ];
+
+p = pie(X);
+
+pText = findobj(p,'Type','text');
+percentValues = get(pText,'String'); 
+txt = {'R-proteins: '; 'Enzymatic: '; 'Housekeeping: '; 'Heterologous: '}; 
+combinedtxt = strcat(txt,percentValues); 
+
+pText(1).String = combinedtxt(1);
+pText(2).String = combinedtxt(2);
+pText(3).String = combinedtxt(3);
+pText(4).String = combinedtxt(4);`
 
 #### Check for convergence:
 `th = mean(P_count_vec_array(0.9*end:end,4));
