@@ -101,7 +101,9 @@ Array, which has length equal to the number of mRNAs. Each element denotes which
 `production_rate(4)`
 
 #### Get ribosome density:
-`[counts, ] = histcounts(state_a(type_idx_array(location_a)==4)-1,30);
+`state_a = state_array(state_array>1);
+location_a = location_array(location_array>0);
+[counts, ] = histcounts(state_a(type_idx_array(location_a)==4)-1,30);
 bar(1:30, counts)`
 
 #### Heterologous mass fraction calculation (mean over some time range after convergence is achieved):
