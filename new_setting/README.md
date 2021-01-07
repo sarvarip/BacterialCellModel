@@ -5,7 +5,7 @@ https://www.youtube.com/watch?v=EPMutCumilk&feature=youtu.be
 https://zenodo.org/record/4415761
 Data ID is the number before the extension.
 
-## No slow codon
+#### No slow codon
 | Data ID     | Promoter strength | RBS strength  |
 | :---        |      :----:       |          ---: |
 |      0      |        1/3        |      1/3      |
@@ -18,7 +18,7 @@ Data ID is the number before the extension.
 |      7      |        1.0        |      3.0      |
 |      8      |        3.0        |      3.0      |
 
-## Slow codon is 5th
+#### Slow codon is 5th
 | Data ID     | Promoter strength | RBS strength  |
 | :---        |      :----:       |          ---: |
 |      9      |        1/3        |      1/3      |
@@ -31,7 +31,7 @@ Data ID is the number before the extension.
 |      16     |        1.0        |      3.0      |
 |      17     |        3.0        |      3.0      |
 
-## Slow codon is 26th
+#### Slow codon is 26th
 | Data ID     | Promoter strength | RBS strength  |
 | :---        |      :----:       |          ---: |
 |      18     |        1/3        |      1/3      |
