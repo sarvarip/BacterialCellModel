@@ -1,6 +1,49 @@
 # Simulation visualization on YouTube
 https://www.youtube.com/watch?v=EPMutCumilk&feature=youtu.be
 
+# Data repo
+https://zenodo.org/record/4415761
+Data ID is the number before the extension.
+
+## No slow codon
+| Data ID     | Promoter strength | RBS strength  |
+| :---        |      :----:       |          ---: |
+|      0      |        1/3        |      1/3      |
+|      1      |        1.0        |      1/3      |
+|      2      |        3.0        |      1/3      |
+|      3      |        1/3        |      1.0      |
+|      4      |        1.0        |      1.0      |
+|      5      |        3.0        |      1.0      |
+|      6      |        1/3        |      3.0      |
+|      7      |        1.0        |      3.0      |
+|      8      |        3.0        |      3.0      |
+
+## Slow codon is 5th
+| Data ID     | Promoter strength | RBS strength  |
+| :---        |      :----:       |          ---: |
+|      9      |        1/3        |      1/3      |
+|      10     |        1.0        |      1/3      |
+|      11     |        3.0        |      1/3      |
+|      12     |        1/3        |      1.0      |
+|      13     |        1.0        |      1.0      |
+|      14     |        3.0        |      1.0      |
+|      15     |        1/3        |      3.0      |
+|      16     |        1.0        |      3.0      |
+|      17     |        3.0        |      3.0      |
+
+## Slow codon is 26th
+| Data ID     | Promoter strength | RBS strength  |
+| :---        |      :----:       |          ---: |
+|      18     |        1/3        |      1/3      |
+|      19     |        1.0        |      1/3      |
+|      20     |        3.0        |      1/3      |
+|      21     |        1/3        |      1.0      |
+|      22     |        1.0        |      1.0      |
+|      23     |        3.0        |      1.0      |
+|      24     |        1/3        |      3.0      |
+|      25     |        1.0        |      3.0      |
+|      26     |        3.0        |      3.0      |
+
 # Explanation of scripts
 
 ### Endogenous results
