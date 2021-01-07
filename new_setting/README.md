@@ -20,7 +20,7 @@ Data ID is the number before the extension.
 
 #### Slow codon is 5th
 | Data ID     | Promoter strength | RBS strength  |
-| :---        |      :----:       |          ---: |
+| :---------- |  :------------:   | ------------: |
 |      9      |        1/3        |      1/3      |
 |      10     |        1.0        |      1/3      |
 |      11     |        3.0        |      1/3      |
