@@ -135,9 +135,11 @@ plot(time_ss, lower*ones(length(time_ss),1));
 plot(0.9*time_ss(end)*ones(length(time_ss),1), linspace(1,P_count_vec_array(end,4),length(time_ss)))`
 
 Alternatively, convergence can be shown by noting that the average ribosome inflow to a certain type of mRNA should be equal to the average outflow of ribosomes. The number of free ribosomes created every minute are:
-`sum(production_rate) + production_rate(1)'
+`sum(production_rate) + production_rate(1)`
+
 Out of these created ribosomes, the following proportion should go back onto the heterologous transcript (we assume that the number of free ribosomes is negligible):
 `sum(temp(type_idx_array==4))/(sum(temp(type_idx_array==1))+sum(temp(type_idx_array==2))+sum(temp(type_idx_array==3))+sum(temp(type_idx_array==4)))`
+
 Hence if our assumption is correct and we're in steady state, we should have the following rough balance:
 '(sum(production_rate) + production_rate(1)) * sum(temp(type_idx_array==4))/(sum(temp(type_idx_array==1))+sum(temp(type_idx_array==2))+sum(temp(type_idx_array==3))+sum(temp(type_idx_array==4))) ~ production_rate(4)'
 
