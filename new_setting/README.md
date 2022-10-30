@@ -141,7 +141,7 @@ Out of these created ribosomes, the following proportion should go back onto the
 `sum(temp(type_idx_array==4))/(sum(temp(type_idx_array==1))+sum(temp(type_idx_array==2))+sum(temp(type_idx_array==3))+sum(temp(type_idx_array==4)))`
 
 Hence if our assumption is correct and we're in steady state, we should have the following rough balance:
-'(sum(production_rate) + production_rate(1)) * sum(temp(type_idx_array==4))/(sum(temp(type_idx_array==1))+sum(temp(type_idx_array==2))+sum(temp(type_idx_array==3))+sum(temp(type_idx_array==4))) ~ production_rate(4)'
+`(sum(production_rate) + production_rate(1)) * sum(temp(type_idx_array==4))/(sum(temp(type_idx_array==1))+sum(temp(type_idx_array==2))+sum(temp(type_idx_array==3))+sum(temp(type_idx_array==4))) ~ production_rate(4)`
 
 
 
