@@ -100,7 +100,10 @@ Array, which has length equal to the number of mRNAs. Each element denotes which
 #### Get heterologous protein production
 `production_rate(4)`
 
-#### Get ribosome density:
+#### Number of ribosomes queuing on heterologous transcript:
+`length(state_a(type_idx_array(location_a)==4))`
+
+#### Get ribosome density on heterologous transcript:
 `state_a = state_array(state_array>1);
 location_a = location_array(location_array>0);
 [counts, ] = histcounts(state_a(type_idx_array(location_a)==4)-1,30)/sum(type_idx_array==4);
