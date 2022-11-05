@@ -100,6 +100,9 @@ Array, which has length equal to the number of mRNAs. Each element denotes which
 #### Get heterologous protein production
 `production_rate(4)`
 
+#### Get number of heterologous transcripts:
+`sum(type_idx_array==4)`
+
 #### Number of ribosomes queuing on heterologous transcript:
 `length(state_a(type_idx_array(location_a)==4))`
 
